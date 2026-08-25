@@ -1,0 +1,495 @@
+{
+  "name": "AI Customer Support Ticket System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "16489b7c-1c70-4aae-abd9-e2be450c958c",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        256
+      ],
+      "id": "0542f94a-3319-45ee-8059-d2d6bf3c3c63",
+      "name": "Receive Support Tickets",
+      "webhookId": "16489b7c-1c70-4aae-abd9-e2be450c958c"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        224,
+        256
+      ],
+      "id": "b2fded99-9469-466b-92a3-9f6025b656b6",
+      "name": "Split Tickets"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Zs8zsvVKyDmhUSEq4jYAuJiWr-6h6m65YnnMijKj5dQ",
+          "mode": "list",
+          "cachedResultName": "AI Customer Support Ticket System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Zs8zsvVKyDmhUSEq4jYAuJiWr-6h6m65YnnMijKj5dQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Zs8zsvVKyDmhUSEq4jYAuJiWr-6h6m65YnnMijKj5dQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customer_name": "={{ $('Split Tickets').item.json.customer_name }}",
+            "email": "={{ $('Split Tickets').item.json.email }}",
+            "message": "={{ $('Split Tickets').item.json.message }}",
+            "priority": "={{ $json.output[0].content[0].text.priority }}",
+            "category": "={{ $json.output[0].content[0].text.category }}",
+            "sentiment": "={{ $json.output[0].content[0].text.sentiment }}",
+            "summary": "={{ $json.output[0].content[0].text.summary }}",
+            "recommended_action": "={{ $json.output[0].content[0].text.recommended_action }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sentiment",
+              "displayName": "sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recommended_action",
+              "displayName": "recommended_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        -64
+      ],
+      "id": "7da3f4ad-72e0-421f-a5bb-f17964acf661",
+      "name": "Save Ticket to Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BnP84YHiQbJ5FZQC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ String($json.output[0].content[0].text.priority).trim().toLowerCase() }}",
+                    "rightValue": "urgent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b5cbc8c1-75f4-4fcf-8b70-2e6d064461be"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4652474b-6c34-42ed-85b4-00ee71e77e3b",
+                    "leftValue": "={{ String($json.output[0].content[0].text.priority).trim().toLowerCase() }}",
+                    "rightValue": "high",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9494332e-4130-4002-959a-9c195722a0bf",
+                    "leftValue": "={{ String($json.output[0].content[0].text.priority).trim().toLowerCase() }}",
+                    "rightValue": "normal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "242d0de6-8ed5-4671-9b30-282d9616d68f",
+                    "leftValue": "={{ String($json.output[0].content[0].text.priority).trim().toLowerCase() }}",
+                    "rightValue": "low",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        352
+      ],
+      "id": "6ac69556-8467-4dda-917f-042b9116a719",
+      "name": "Route by Priority"
+    },
+    {
+      "parameters": {
+        "sendTo": "yassine.workflow@gmail.com",
+        "subject": "🚨 Urgent Customer Support Ticket",
+        "message": "=Customer: {{ $json.output[0].content[0].text.summary }}\n\nPriority: {{ $json.output[0].content[0].text.priority }}\n\nCategory: {{ $json.output[0].content[0].text.category }}\n\nRecommended Action:\n{{ $json.output[0].content[0].text.recommended_action }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        32
+      ],
+      "id": "769a015f-d908-4b5a-ab38-2529c8290cd4",
+      "name": "Send Urgent Alert",
+      "webhookId": "89d07d72-02b6-4cad-981c-0c4375c77896",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m32i3KDDsVYCog5F",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "yassine.workflow@gmail.com",
+        "subject": "⚠️ High Priority Customer Support Ticket",
+        "message": "=Customer: {{ $json.output[0].content[0].text.summary }}\n\nPriority: {{ $json.output[0].content[0].text.priority }}\n\nCategory: {{ $json.output[0].content[0].text.category }}\n\nRecommended Action:\n{{ $json.output[0].content[0].text.recommended_action }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        160
+      ],
+      "id": "c3f97bbd-20f7-4a20-ace0-dcbf85ef58fd",
+      "name": "Send High Priority Alert",
+      "webhookId": "5e395127-c4e3-462f-9f34-4959ee8d8cbd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m32i3KDDsVYCog5F",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "yassine.workflow@gmail.com",
+        "subject": "Normal Customer Support Ticket",
+        "message": "=Customer: {{ $json.output[0].content[0].text.summary }}\n\nPriority: {{ $json.output[0].content[0].text.priority }}\n\nCategory: {{ $json.output[0].content[0].text.category }}\n\nRecommended Action: {{ $json.output[0].content[0].text.recommended_action }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        944,
+        336
+      ],
+      "id": "d93eb1c3-b610-4463-8b94-d69c5d3c8808",
+      "name": "Send Normal Priority Alert",
+      "webhookId": "06795a44-7ecb-49bc-acd5-853b1dd92f9c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m32i3KDDsVYCog5F",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Split Tickets').item.json.email }}",
+        "subject": "=Customer Support - {{ $('Split Tickets').item.json.customer_name }}",
+        "message": "=<p>Hello {{ $('Split Tickets').item.json.customer_name }},</p>\n\n<p>We have reviewed your support request.</p>\n\n<p><strong>Priority:</strong> {{ $json.output[0].content[0].text.priority }}</p>\n\n<p><strong>Category:</strong> {{ $json.output[0].content[0].text.category }}</p>\n\n<p><strong>Summary:</strong> {{ $json.output[0].content[0].text.summary }}</p>\n\n<p><strong>Recommended Action:</strong> {{ $json.output[0].content[0].text.recommended_action }}</p>\n\n<p>Best regards,<br>Customer Support Team</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        512
+      ],
+      "id": "fa04e288-a68b-4ebb-8527-249e1fbc2e8b",
+      "name": "Send Fallback Alert",
+      "webhookId": "b76f962c-d2f9-4a7f-8617-116505cdab46",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m32i3KDDsVYCog5F",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Analyze the CURRENT customer support ticket only.\n\nCustomer Name:\n{{ $json.customer_name }}\n\nCustomer Email:\n{{ $json.email }}\n\nCustomer Message:\n{{ $json.message }}\n\nClassify this specific ticket.\n\nReturn ONLY a JSON object with exactly these fields:\n\n{\n  \"priority\": \"Urgent, High, Normal, or Low\",\n  \"category\": \"Billing Issue, Technical Issue, Account Issue, or General Inquiry\",\n  \"sentiment\": \"positive, neutral, or negative\",\n  \"summary\": \"Specific summary of this customer's message\",\n  \"recommended_action\": \"Specific action for this customer\"\n}\n\nDo not use information from any other customer.\nDo not return generic or identical results."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "ticket_analysis",
+              "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"sentiment\": {\n      \"type\": \"string\"\n    },\n    \"category\": {\n      \"type\": \"string\"\n    },\n    \"priority\": {\n      \"type\": \"string\"\n    },\n    \"summary\": {\n      \"type\": \"string\"\n    },\n    \"recommended_action\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"sentiment\",\n    \"category\",\n    \"priority\",\n    \"summary\",\n    \"recommended_action\"\n  ]\n}",
+              "strict": true
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        80
+      ],
+      "id": "c1bccb0d-73ef-4d26-8da5-17dd8340de7a",
+      "name": "AI Ticket Analyzer",
+      "credentials": {
+        "openAiApi": {
+          "id": "5hfeS4a2Jsle6In9",
+          "name": "OpenAI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Support Tickets": {
+      "main": [
+        [
+          {
+            "node": "Split Tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Tickets": {
+      "main": [
+        [
+          {
+            "node": "AI Ticket Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Ticket to Google Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Route by Priority": {
+      "main": [
+        [
+          {
+            "node": "Send Urgent Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send High Priority Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Normal Priority Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Fallback Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Ticket Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Save Ticket to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route by Priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1532ddab-c250-4154-9fe0-5c1628c834b7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "955ccf30d80e57b1183cfe6d92e7b5efc4a1e0cc34325adab3690010dd2eec85"
+  },
+  "nodeGroups": [],
+  "id": "cjxIbTy3n6deo2Ga",
+  "tags": []
+}
