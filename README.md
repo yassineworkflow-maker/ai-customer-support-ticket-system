@@ -1,5 +1,5 @@
 # AI Customer Support Ticket System
-
+![AI Customer Support Ticket System](workflow.png)
 > An AI-powered customer support automation system built with n8n, OpenAI, Google Sheets, Gmail, Webhooks, and intelligent priority routing.
 
 ## 🚀 Overview
